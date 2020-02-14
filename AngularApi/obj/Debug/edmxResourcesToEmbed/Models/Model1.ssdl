@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="angularcrudModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'angularcrud.dbo.CountryMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="CountryMaster">
+    <Key>
+      <PropertyRef Name="CountryID" />
+      <PropertyRef Name="CountryName" />
+    </Key>
+    <Property Name="CountryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CountryName" Type="varchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EmployeeDetails">
+    <Key>
+      <PropertyRef Name="EmpId" />
+    </Key>
+    <Property Name="EmpId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmpName" Type="varchar" MaxLength="50" />
+    <Property Name="DateOfBirth" Type="date" />
+    <Property Name="EmailId" Type="varchar" MaxLength="50" />
+    <Property Name="Gender" Type="varchar" MaxLength="10" />
+    <Property Name="Address" Type="varchar" MaxLength="100" />
+    <Property Name="PinCode" Type="varchar" MaxLength="50" />
+    <Property Name="isActive" Type="bit" />
+    <Property Name="CountryID" Type="int" />
+  </EntityType>
+  <EntityContainer Name="angularcrudModelStoreContainer">
+    <EntitySet Name="EmployeeDetails" EntityType="Self.EmployeeDetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CountryMaster" EntityType="Self.CountryMaster" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [CountryMaster].[CountryID] AS [CountryID], 
+    [CountryMaster].[CountryName] AS [CountryName]
+    FROM [dbo].[CountryMaster] AS [CountryMaster]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>
