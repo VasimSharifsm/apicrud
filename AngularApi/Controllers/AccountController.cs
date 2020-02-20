@@ -16,6 +16,9 @@ using Microsoft.Owin.Security.OAuth;
 using AngularApi.Models;
 using AngularApi.Providers;
 using AngularApi.Results;
+using AngularApi.DTO;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace AngularApi.Controllers
 {
@@ -61,11 +64,42 @@ namespace AngularApi.Controllers
             return new UserInfoViewModel
             {
                 Email = User.Identity.GetUserName(),
+                
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
         }
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<HttpResponseMessage> Login(DtoIdentityModel DtoIdentityModel)
+        {
+            var postData = new Dictionary<string, string>
+                    {
+                        { "grant_type", "password"},
+                        { "username", DtoIdentityModel.UserName},
+                        { "password", DtoIdentityModel.Password},
+                    };
 
+            string apiBaseURL = "http://localhost:57208";
+            string serviceConfigurationURL = apiBaseURL + "/token";
+            //string serviceConfigurationURL = "http://192.168.100.73" + "/token"; 
+            var content = new FormUrlEncodedContent(postData);
+            HttpClient client = new HttpClient();
+            var response = client.PostAsync(serviceConfigurationURL, content).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = response.Content.ReadAsStringAsync().Result;
+                DtoIdentityToken objDTOIdentityToken = JsonConvert.DeserializeObject<DtoIdentityToken>(responseContent);                
+                return Request.CreateResponse(HttpStatusCode.OK, objDTOIdentityToken);
+            }
+            else
+            {
+                string responseContent = response.Content.ReadAsStringAsync().Result;
+                DtoIdentityToken objDTOIdentityToken = JsonConvert.DeserializeObject<DtoIdentityToken>(responseContent);
+                return Request.CreateResponse(HttpStatusCode.BadGateway, new { ErrorMessage = objDTOIdentityToken.error_description });
+            }
+        }
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -125,7 +159,7 @@ namespace AngularApi.Controllers
 
             IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
                 model.NewPassword);
-            
+
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -258,9 +292,9 @@ namespace AngularApi.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
+
+                ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+                   OAuthDefaults.AuthenticationType);
                 ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
                     CookieAuthenticationDefaults.AuthenticationType);
 
@@ -368,7 +402,7 @@ namespace AngularApi.Controllers
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
-                return GetErrorResult(result); 
+                return GetErrorResult(result);
             }
             return Ok();
         }
