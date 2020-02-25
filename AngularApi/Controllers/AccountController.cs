@@ -361,10 +361,36 @@ namespace AngularApi.Controllers
             {
                 return BadRequest(ModelState);
             }
+            // Managing Roles
+            //var userStore = new UserStore<ApplicationUser>(new ApplicationDbContext());
+            //var manager = new UserManager<ApplicationUser>(userStore);
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            //var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            //IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+            //manager.AddToRoles(user.Id, model.Roles);
+
+
+            IdentityResult result;
+            using (var context = new ApplicationDbContext())
+            {
+                var roleStore = new RoleStore<IdentityRole>(context);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
+
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+
+                result = await UserManager.CreateAsync(user, model.Password);
+                await userManager.AddToRoleAsync(user.Id, model.Roles);
+
+            }
+
+
 
             if (!result.Succeeded)
             {

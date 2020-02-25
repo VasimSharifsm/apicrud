@@ -113,4 +113,3 @@ D:\Vasim\Vs2017\EmployeeServiceApi\AngularApi\AngularApi\obj\Debug\AngularApi.cs
 D:\Vasim\Vs2017\EmployeeServiceApi\AngularApi\AngularApi\obj\Debug\AngularApi.csproj.CopyComplete
 D:\Vasim\Vs2017\EmployeeServiceApi\AngularApi\AngularApi\obj\Debug\AngularApi.dll
 D:\Vasim\Vs2017\EmployeeServiceApi\AngularApi\AngularApi\obj\Debug\AngularApi.pdb
-D:\Vasim\Vs2017\EmployeeServiceApi\AngularApi\AngularApi\obj\Debug\AngularApi.csprojAssemblyReference.cache

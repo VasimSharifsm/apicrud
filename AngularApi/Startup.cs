@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AngularApi.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
 
@@ -14,5 +17,6 @@ namespace AngularApi
         {
             ConfigureAuth(app);
         }
+      
     }
 }
