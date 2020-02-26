@@ -100,6 +100,29 @@ namespace AngularApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadGateway, new { ErrorMessage = objDTOIdentityToken.error_description });
             }
         }
+        [HttpGet]
+        [Authorize(Roles ="Admin")]
+        [Route("ForAdminRole")]
+        public string ForAdminRole()
+        {
+            return "For Admin Role";
+        }
+        [HttpGet]
+        [Authorize(Roles = "Reader")]
+        [Route("ForReaderRole")]
+        public string ForReaderRole()
+        {
+            return "For Reader Role";
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin, Reader")]
+        [Route("ForBothRole")]
+        public string ForBothRole()
+        {
+            return "For Admin, Reader Role";
+        }
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
